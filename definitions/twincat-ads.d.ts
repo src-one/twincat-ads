@@ -39,7 +39,7 @@ interface Handle {
     value?: any;
 }
 
-interface NodeAds {
+interface TwincatAds {
     connect: (Options, Callback) => {};
     end: (Callback) => {};
     readDeviceInfo: (Callback) => {};
@@ -48,7 +48,10 @@ interface NodeAds {
     notify: (Callback) => {};
     writeRead: (Value, Callback) => {};
     getSymbols: (Callback) => {};
+    getHandle: (Value, Callback) => {};
+    getHandles: ([Value], Callback) => {};
     multiRead: ([Value], Callback) => {};
+    multiWrite: ([Value], Callback) => {};
 
     BOOL: number;
     BYTE: number;
@@ -73,8 +76,8 @@ interface NodeAds {
     STRING: number;
 }
 
-declare module "node-ads" {
+declare module 'twincat-ads' {
     export = ads;
 }
 
-declare let ads: NodeAds; 
+declare let ads: TwincatAds; 
