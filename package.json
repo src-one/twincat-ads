@@ -21,7 +21,7 @@
   "engines": {
     "node": ">=4"
   },
-  "author": "Florian Kapust (@oVi1337)",
+  "author": "Florian Kapust (@ovi1337)",
   "licenses": [
     {
       "type": "MIT"
@@ -29,11 +29,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/src-one/node-ads"
+    "url": "https://github.com/src-one/twincat-ads"
   },
   "dependencies": {
     "debug": "^3.1.0",
-    "safe-buffer": "^5.1.1"
+    "safe-buffer": "^5.1.2"
   },
   "devDependencies": {
     "eslint": "^5.3.0"
