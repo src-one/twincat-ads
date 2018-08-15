@@ -10,7 +10,7 @@ initial version
 ### Connect to the Host
 
 ```javascript
-var ads = require('node-ads');
+var ads = require('twincat-ads');
 
 var options = {
     // The IP or hostname of the target machine
@@ -383,5 +383,5 @@ client.on('error', function(error) {
 > Twincat and ADS (Automation Device Specification) is brought by Beckhoff&copy;   
 > I'm not affiliated from Beckhoff&copy;!
 
-> Credits:   
-> - The initial idea to implement the TCP/IP API came from Inando - Copyright (c) 2012 Inando
+## Credits:   
+- The initial idea to implement the TCP/IP API came from Inando - Copyright (c) 2012 Inando
