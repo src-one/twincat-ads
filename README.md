@@ -380,8 +380,8 @@ client.on('error', function(error) {
 });
 ```
 
-> Twincat and ADS (Automation Device Specification) is brought by Beckhoff &copy;
-> I'm not also affiliated from Beckhoff &copy;
+> Twincat and ADS (Automation Device Specification) is brought by Beckhoff&copy;   
+> I'm not affiliated from Beckhoff&copy;!
 
-> Credits: 
-> - The initial Idea came from Copyright (c) 2012 Inando
+> Credits:   
+> - The initial idea to implement the TCP/IP API came from Inando - Copyright (c) 2012 Inando
