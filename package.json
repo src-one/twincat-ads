@@ -1,6 +1,6 @@
 {
   "name": "twincat-ads",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "Easy to use Twincat ADS TCP/IP communication package",
   "main": "index.js",
   "keywords": [
