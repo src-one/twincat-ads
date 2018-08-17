@@ -1,15 +1,19 @@
-interface ConnectionSettings {
+interface Options {
     host: string;
     amsNetIdTarget: string;
     amsNetIdSource: string;
     port?: number;
     amsPortSource?: number;
     amsPortTarget?: number;
-    verbose?: boolean;
+}
+
+interface Value {
+    symName: string;
+    byteLength: number;
 }
 
 interface Callback {
-    (error: Error, result: Handle|Handle[]|undefined): void;
+    (error: Error, handle: any): void;
 }
 
 interface AdsType {
@@ -23,10 +27,6 @@ interface Symbol {
     name: string;
     type: string;
     comment?: string;
-    totalByteLength?: number,
-    transmissionMode?: number,
-    maxDelay?: number,
-    cycleTime?: number,
     value?: any;
 }
 
@@ -37,22 +37,21 @@ interface Handle {
     indexGroup?: number,
     indexOffset?: number,
     value?: any;
-    error?: any;
 }
 
 interface TwincatAds {
-    connect: (ConnectionSettings, Callback) => {};
+    connect: (Options, Callback) => {};
     end: (Callback) => {};
     readDeviceInfo: (Callback) => {};
-    read: (Handle, Callback) => {};
-    write: (Handle, Callback) => {};
+    read: (Value, Callback) => {};
+    write: (Value, Callback) => {};
     notify: (Callback) => {};
-    writeRead: (Handle, Callback) => {};
+    writeRead: (Value, Callback) => {};
     getSymbols: (Callback) => {};
-    getHandle: (Handle, Callback) => {};
-    getHandles: ([Handle], Callback) => {};
-    multiRead: ([Handle], Callback) => {};
-    multiWrite: ([Handle], Callback) => {};
+    getHandle: (Value, Callback) => {};
+    getHandles: ([Value], Callback) => {};
+    multiRead: ([Value], Callback) => {};
+    multiWrite: ([Value], Callback) => {};
 
     BOOL: number;
     BYTE: number;
