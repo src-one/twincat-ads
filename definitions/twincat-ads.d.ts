@@ -55,25 +55,31 @@ interface TwincatAds {
 
     BOOL: number;
     BYTE: number;
-    WORD: number;
-    DWORD: number;
-    SINT: number;
     USINT: number;
-    INT: number;
+    UINT8: number;
+    SINT: number;
+    INT8: number;
     UINT: number;
-    DINT: number;
+    WORD: number;
+    UINT16: number;
+    INT: number;
+    INT16: number;
+    DWORD: number;
     UDINT: number;
-    LINT: number;
-    ULINT: number;
+    UINT32: number;
+    DINT: number;
+    INT32: number;
     REAL: number;
     LREAL: number;
+    STRING: number;
     TIME: number;
     TIME_OF_DAY: number;
     TOD: number;
     DATE: number;
     DATE_AND_TIME: number;
     DT: number;
-    STRING: number;
+    //LINT: number; // 64 Bit Integer - currently not supported by TwinCAT
+    //ULINT: number; // Unsigned 64 Bit Integer - currently not supported by TwinCAT
 }
 
 declare module 'twincat-ads' {
