@@ -125,6 +125,25 @@ var client = ads.connect(options, function() {
         if (error) {
             console.log(error);
         }
+    });
+});
+```
+
+
+### Combined write with fetching the value afterwards
+
+```javascript
+var handle = {
+    symName: '.TESTINT',
+    byteLength: ads.INT,
+    value: 5
+};
+
+var client = ads.connect(options, function() {
+    this.write(handle, function(error) {
+        if (error) {
+            console.log(error);
+        }
 
         this.read(handle, function(error, handle) {
             if (error) {
@@ -152,7 +171,7 @@ var client = ads.connect(options, function() {
             symName: '.TESTINT',
             byteLength: ads.INT,
         }],
-        function (handles) {
+        function (error, handles) {
             if (handles.error) {
                 console.error(handles.error);
             }
@@ -180,7 +199,7 @@ var client = ads.connect(options, function() {
             byteLength: ads.INT,,
             value: 5
         }],
-        function (handles) {
+        function (error, handles) {
             if (handles.error) {
                 console.error(handles.error);
             }
@@ -225,7 +244,7 @@ var client = ads.connect(options, function() {
 ```javascript
 var handle = {
     symName: '.CounterTest',       
-    byteLength: ads.WORD,  
+    byteLength: ads.INT,  
 };
 
 var client = ads.connect(options, function() {
@@ -235,11 +254,13 @@ var client = ads.connect(options, function() {
 client.on('notification', function(handle){
     console.log(handle.value);
 });
+```
 
-process.on('exit', function () {
-    console.log('exit');
-});
 
+
+### Auto cleanup on terminate the application.
+
+```javascript
 process.on('SIGINT', function() {
     client.end(function() {
         process.exit();
@@ -270,70 +291,19 @@ var client = ads.connect(options, function() {
 var client = ads.connect(options, function() {
     this.readState(function(error, result) {
         if (error) {
-            console.error(error);
+            console.log(error);
+        } else {
+            switch(result.adsState) {
+                case ads.ADSSTATE.RUN:
+                    console.log('The PLC is working well! :)');
+                    break;
+                case ads.ADSSTATE.STOP:
+                    console.log('The PLC is stopped, please run your application to make it work.');
+                    break;
+                default:
+                    console.log('The current state is ' + ads.ADSSTATE.fromId(result.adsState));
+            }
         }
-
-        var text = '?';
-
-        switch (result.adsState) {
-            case ads.ADSSTATE.INVALID:
-                text = 'INVALID';
-                break;
-            case ads.ADSSTATE.IDLE:
-                text = 'IDLE';
-                break;
-            case ads.ADSSTATE.RESET:
-                text = 'RESET';
-                break;
-            case ads.ADSSTATE.INIT:
-                text = 'INIT';
-                break;
-            case ads.ADSSTATE.START:
-                text = 'START';
-                break;
-            case ads.ADSSTATE.RUN:
-                text = 'RUN';
-                break;
-            case ads.ADSSTATE.STOP:
-                text = 'STOP';
-                break;
-            case ads.ADSSTATE.SAVECFG:
-                text = 'SAVECFG';
-                break;
-            case ads.ADSSTATE.LOADCFG:
-                text = 'LOADCFG';
-                break;
-            case ads.ADSSTATE.POWERFAILURE:
-                text = 'POWERFAILURE';
-                break;
-            case ads.ADSSTATE.POWERGOOD:
-                text = 'POWERGOOD';
-                break;
-            case ads.ADSSTATE.ERROR:
-                text = 'ERROR';
-                break;
-            case ads.ADSSTATE.SHUTDOWN:
-                text = 'SHUTDOWN';
-                break;
-            case ads.ADSSTATE.SUSPEND:
-                text = 'SUSPEND';
-                break;
-            case ads.ADSSTATE.RESUME:
-                text = 'RESUME';
-                break;
-            case ads.ADSSTATE.CONFIG:
-                text = 'CONFIG';
-                break;
-            case ads.ADSSTATE.RECONFIG:
-                text = 'RECONFIG';
-                break;
-            case ads.ADSSTATE.STOPPING:
-                text = 'STOPPING';
-                break;
-        }
-        console.log('The state is ' + text);
-
-        this.end();
     });
 });
 ```
