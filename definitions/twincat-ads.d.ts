@@ -1,19 +1,15 @@
-interface Options {
+interface ConnectionSettings {
     host: string;
     amsNetIdTarget: string;
     amsNetIdSource: string;
     port?: number;
     amsPortSource?: number;
     amsPortTarget?: number;
-}
-
-interface Value {
-    symName: string;
-    byteLength: number;
+    verbose?: boolean;
 }
 
 interface Callback {
-    (error: Error, handle: any): void;
+    (error: Error, result: Handle|Handle[]|undefined): void;
 }
 
 interface AdsType {
@@ -22,36 +18,45 @@ interface AdsType {
 }
 
 interface Symbol {
-    indexGroup: number;
-    indexOffset: number;
     name: string;
-    type: string;
-    comment?: string;
+    byteLength: AdsType;
+    propname?: string[];
+    totalByteLength?: number,
+    transmissionMode?: number,
+    maxDelay?: number,
+    cycleTime?: number,
+    symHandle?: number,
     value?: any;
+    indexGroup?: number;
+    indexOffset?: number;
+    comment?: string;
+    type?: string;
 }
 
 interface Handle {
-    symName: string;
+    name: string;
     byteLength: number;
     propname?: string;
     indexGroup?: number,
     indexOffset?: number,
+    symHandle?: number,
     value?: any;
+    error?: any;
 }
 
 interface TwincatAds {
-    connect: (Options, Callback) => {};
+    connect: (ConnectionSettings, Callback) => {};
     end: (Callback) => {};
     readDeviceInfo: (Callback) => {};
-    read: (Value, Callback) => {};
-    write: (Value, Callback) => {};
+    read: (Handle, Callback) => {};
+    write: (Handle, Callback) => {};
     notify: (Callback) => {};
-    writeRead: (Value, Callback) => {};
+    writeRead: (Handle, Callback) => {};
     getSymbols: (Callback) => {};
-    getHandle: (Value, Callback) => {};
-    getHandles: ([Value], Callback) => {};
-    multiRead: ([Value], Callback) => {};
-    multiWrite: ([Value], Callback) => {};
+    getHandle: (Handle, Callback) => {};
+    getHandles: ([Handle], Callback) => {};
+    multiRead: ([Handle], Callback) => {};
+    multiWrite: ([Handle], Callback) => {};
 
     BOOL: number;
     BYTE: number;
@@ -80,6 +85,10 @@ interface TwincatAds {
     DT: number;
     //LINT: number; // 64 Bit Integer - currently not supported by TwinCAT
     //ULINT: number; // Unsigned 64 Bit Integer - currently not supported by TwinCAT
+
+    ADSIGRP: any;
+    ADSSTATE: any;
+    ERROR: any;
 }
 
 declare module 'twincat-ads' {
