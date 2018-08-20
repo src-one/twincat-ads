@@ -56,9 +56,9 @@ client.on('error', function(error) {
 
 ```javascript
 var handle = {
-    // The symname is the name of the Symbol which is defined in 
+    // The name is the name of the Symbol which is defined in 
     // the PLC
-    symName: '.TESTINT',
+    name: '.TESTINT',
 
     // An ads type object or an array of type objects.
     // You can also specify a number or an array of numbers,
@@ -93,7 +93,7 @@ var handle = {
 
 ```javascript
 var handle = {
-    symName: '.TESTINT',
+    name: '.TESTINT',
     byteLength: ads.INT,
 };
 
@@ -101,9 +101,11 @@ var client = ads.connect(options, function() {
     this.read(handle, function(error, handle) {
         if (error) {
             console.log(error);
-        };
+        }
 
-        console.log(handle.value);
+        if (handle) {
+            console.log(handle.value);
+        }
 
         this.end();
     })
@@ -115,15 +117,15 @@ var client = ads.connect(options, function() {
 
 ```javascript
 var handle = {
-    symName: '.TESTINT',
+    name: '.TESTINT',
     byteLength: ads.INT,
     value: 5
 };
 
 var client = ads.connect(options, function() {
     this.write(handle, function(error) {
-        if (error) {
-            console.log(error);
+        if(error) {
+            console.error(error);
         }
     });
 });
@@ -134,7 +136,7 @@ var client = ads.connect(options, function() {
 
 ```javascript
 var handle = {
-    symName: '.TESTINT',
+    name: '.TESTINT',
     byteLength: ads.INT,
     value: 5
 };
@@ -146,11 +148,13 @@ var client = ads.connect(options, function() {
         }
 
         this.read(handle, function(error, handle) {
-            if (error) {
+            if(error) {
                  console.error(error);
             }
 
-            console.log(handle.value);
+            if(handle) {
+                console.log(handle.value);
+            }
 
             this.end();
         });
@@ -165,18 +169,26 @@ var client = ads.connect(options, function() {
 var client = ads.connect(options, function() {
     this.multiRead(
         [{
-            symName: '.TESTBOOL',
+            name: '.TESTBOOL',
             byteLength: ads.BOOL,
         }, {
-            symName: '.TESTINT',
+            name: '.TESTINT',
             byteLength: ads.INT,
         }],
         function (error, handles) {
-            if (handles.error) {
-                console.error(handles.error);
+            if(error) {
+                console.error(error);
+            } 
+            
+            if(handles) {
+                handles.forEach(function(handle) {
+                    if (handle.error) {
+                        console.error(handle.error);
+                    } else {
+                        console.log(handle.value);
+                    }
+                }
             }
-
-            console.log(handles);
 
             this.end();
         }
@@ -191,20 +203,28 @@ var client = ads.connect(options, function() {
 var client = ads.connect(options, function() {
     this.multiWrite(
         [{
-            symName: '.TESTBOOL',
+            name: '.TESTBOOL',
             byteLength: ads.BOOL,,
             value: true
         }, {
-            symName: '.TESTINT',
+            name: '.TESTINT',
             byteLength: ads.INT,,
             value: 5
         }],
         function (error, handles) {
-            if (handles.error) {
-                console.error(handles.error);
+            if (error) {
+                console.error(error);
+            } 
+            
+            if(handles) {
+                handles.forEach(function(handle) {
+                    if (handle.error) {
+                        console.error(handle.error);
+                    } else {
+                        console.log(handle);
+                    }
+                }
             }
-
-            console.log(handles);
 
             this.end();
         }
@@ -219,17 +239,23 @@ var client = ads.connect(options, function() {
 var client = ads.connect(options, function() {
     this.getHandles(
         [{
-            symName: '.TESTBOOL',
+            name: '.TESTBOOL',
         }, {
-            symName: '.TESTINT',
+            name: '.TESTINT',
         }],
         function (error, handles) {
             if (error) {
                 console.error(error);
-            } else if (handles.error) {
-                console.error(handles.error);
-            } else {
-                console.log(handles);
+            } 
+            
+            if(handles) {
+                handles.forEach(function(handle) {
+                    if (handle.error) {
+                        console.error(handle.error);
+                    } else {
+                        console.log(handle);
+                    }
+                }
             }
 
             this.end();
@@ -243,7 +269,7 @@ var client = ads.connect(options, function() {
 
 ```javascript
 var handle = {
-    symName: '.CounterTest',       
+    name: '.CounterTest',       
     byteLength: ads.INT,  
 };
 
@@ -274,10 +300,13 @@ process.on('SIGINT', function() {
 ```javascript
 var client = ads.connect(options, function() {
     this.getSymbols(function(error, symbols) {
-        if (error) {
+        if(error) {
             console.error(error);
         }
-        console.log(symbols);
+
+        if(result) {
+            console.log(symbols);
+        }
 
         this.end();
     });
@@ -290,9 +319,11 @@ var client = ads.connect(options, function() {
 ```javascript
 var client = ads.connect(options, function() {
     this.readState(function(error, result) {
-        if (error) {
-            console.log(error);
-        } else {
+        if(error) {
+            console.error(error);
+        }
+
+        if(result) {
             switch(result.adsState) {
                 case ads.ADSSTATE.RUN:
                     console.log('The PLC is working well! :)');
@@ -301,27 +332,23 @@ var client = ads.connect(options, function() {
                     console.log('The PLC is stopped, please run your application to make it work.');
                     break;
                 default:
-                    console.log('The current state is ' + ads.ADSSTATE.fromId(result.adsState));
+                    console.log('The current state is: ' + ads.ADSSTATE.fromId(result.adsState));
             }
         }
+
+        this.end();
     });
 });
 ```
 
 
-### Event-Driven detection for changes of the Symbol-Table
+### Event-driven detection for changes of the Symbol-Table
 
 If the symbol table changes, like a new PLC program is written into the controller, the handles must be loaded once again.
-  
 The example below illustrates how changes of the Symbol-Table can be detected.
 
 ```javascript
-var start = false;
-
-var client = ads.connect(options, function() {
-    start = true;
-    this.notify(handle);
-});
+var started = false;
 
 var handle = {
     indexGroup: ads.ADSIGRP.SYM_VERSION,
@@ -329,24 +356,20 @@ var handle = {
     byteLength: ads.BYTE,
 };
 
+var client = ads.connect(options, function() {
+    started = true;
+    
+    this.notify(handle);
+});
+
 client.on('notification', function(handle) {
-    if (start) {
-      console.log('symbol table version ' + handle.value);
+    if(started) {
+      console.log('current symbol table version: ' + handle.value);
     } else {
-      console.log('symbol table changed ' + handle.value);
+      console.log('symbol table changed to: ' + handle.value);
     }
     
-    start = false;
-});
-
-process.on('SIGINT', function() {
-    client.end(function() {
-        process.exit();
-    });
-});
-
-client.on('error', function(error) {
-    console.log(error);
+    started = false;
 });
 ```
 
